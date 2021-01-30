@@ -1,116 +1,190 @@
-; Transpose Esc and CapsLock
+; =============================================================================
+;  Refactored in HK 2021
+; =============================================================================
+; ---------------------------------------------------------------------------
+;  Function Definitions
+; ---------------------------------------------------------------------------
+WinXOR(Tail)
+{
+  SetTitleMatchMode, RegEx
+  Pattern = ^.*%Tail%
+  IfWinActive, %Pattern%
+    WinMinimize, %Pattern%
+  else
+    WinActivate, %Pattern%
+}
+
+; ---------------------------------------------------------------------------
+;  Re-map Keys
+; ---------------------------------------------------------------------------
+; > Transpose Esc and CapsLock
 CapsLock::Esc
 Esc::CapsLock
 
-; Google Search Shortcut
-!s::Send ^l{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}
+; ---------------------------------------------------------------------------
+;  Direction Related
+; ---------------------------------------------------------------------------
+; ← ↓ ↑ →
+<!h::Send {Left}
+<!j::Send {Down}
+<!k::Send {Up}
+<!l::Send {Right}
 
-; Emacs
-;!^f::Send {Right}
-!f::Send ^{Right}
-;!^b::Send {Left}
-!b::Send ^{Left}
-;^n::Send {Down}
-;^p::Send {Up}
-!a::Send {Home}
-!e::Send {End}
+; Windows Desktop
+<!<^.::Send #^{Right}
+<!<^,::Send #^{Left}
 
 ; Other hot keys
-^h::Send {Backspace}
-^+h::Send {Control Down}{Backspace}{Control Up}
-!+h::Send !{Left}
-;^l::Send {Delete}
-^+l::Send ^{Delete}
-!+l::Send !{Right}
-^;::Send {Enter}
-!h::Send {Left}
-!l::Send {Right}
-!j::Send {Down}
-!+j::Send {Shift Down}{Down}{Shift Up}
-!k::Send {Up}
-!+k::Send {Shift Down}{Up}{Shift Up}
-!o::Send {End}{Enter}
-+!o::Send {Up}{End}{Enter}
+<!.:: Send ^{PgDn}
+<!,:: Send ^{PgUp}
+
+; ---------------------------------------------------------------------------
+;  Text Editor 
+; ---------------------------------------------------------------------------
+; Delete backward
+<^h::Send {Backspace}
+; Select left/right
+<!<+h::Send +{Left}
+<!<+l::Send +{Right}
+; Jump forward/backward a word
+<!b::Send ^{Left}
+<!f::Send ^{Right}
+; Select forward/backward a word
+<!<+b::Send ^+{Left}
+<!<+f::Send ^+{Right}
+; Jump to line beginning/end
+<!a::Send {Home}
+<!e::Send {End}
+
+; Select to line beginning/end
+<!<+a::Send +{Home}
+<!<+e::Send +{End}
+; Select from cursor to line above/below
+<!<+j::Send {Shift Down}{Down}{Shift Up}
+<!<+k::Send {Shift Down}{Up}{Shift Up}
+
+; Delete backward word
+<^<+h::Send {Control Down}{Backspace}{Control Up}
+; Open a new line below/above
+<!o::Send {End}{Enter}
+<+<!o::Send {Up}{End}{Enter}
+; Delete this line
 !d::Send {Home}{Shift Down}{End}{Shift Up}{Backspace}
+; Delete all after the cursor in this line  
 !c::Send {Shift Down}{End}{Shift Up}{Backspace}
-+!f::Send {Ctrl Down}{Shift Down}{Right}{Ctrl Up}{Shift Up}
-+!b::Send {Ctrl Down}{Shift Down}{Left}{Ctrl Up}{Shift Up}
-+!e::Send {Shift Down}{End}{Shift Up}
-!.:: Send {Ctrl Down}{PgDn}{Ctrl Up}
-!,:: Send {Ctrl Down}{PgUp}{Ctrl Up}
 
-; Deprecated
-;!u::Send {Ctrl Down}{Left}{Ctrl Up}
-;!i::Send {Ctrl Down}{Right}{Ctrl Up}
-;!y::Send {Home}
-;!o::Send {End}
+; ---------------------------------------------------------------------------
+;  App Hotkeys
+; ---------------------------------------------------------------------------
+>!a::WinXOR("Adobe Acrobat Pro DC")
+>!c::WinXOR("Google Chrome")
+>!d::WinXOR("Docear")
+>!p::WinXOR("\.py$")
+>!<+p::WinXOR("PowerPoint")
+>!o::WinXOR("OneNote")	 
+>!v::WinXOR("GVIM")
 
-; Mouse Simulation
-^!h:: 
-    MouseMove, -50, 0, 5, R
-Return
+; ---------------------------------------------------------------------------
+;  CTRL+SHIFT+ALT Combinations
+; ---------------------------------------------------------------------------
 
-^!+h:: 
-    MouseMove, -400, 0, 5, R
-Return
+; ---------------------------------------------------------------------------
+;  CTRL+SHIFT+ALT+; -> Command Center
+; ---------------------------------------------------------------------------
+<^<!;::
+  InputBox, cmd, Command Window, Please enter your command.,  , 300, 100
+  if ErrorLevel
+    return
 
-^!l::
-    MouseMove, 50, 0, 5, R
-Return
+  ; Select Editor
+  if (cmd == "select editor" or cmd = "se") {
+    FileSelectFile Editor, 2,, Select your editor, Programs (*.exe)
+    if ErrorLevel
+        return
+    ; TODO: this line seems not working
+    RegWrite, REG_SZ, HKCR\AutoHotkeyScript\Shell\Edit\Command,, "%Editor%" "`%1"
+    MsgBox, "%Editor%" has been set as the default editor.
+    return
+  }
 
-^!+l::
-    MouseMove, 400, 0, 5, R
-Return
+  ; Edit current script
+  if (cmd == "edit" or cmd = "e") {
+    Edit
+    return
+  }
 
-^!j::
-    MouseMove, 0, 50, 5, R
-Return
-
-^!+j::
-    MouseMove, 0, 300, 5, R
-Return
-
-^!k::
-    MouseMove, 0, -50, 5, R
-Return
-
-^!+k::
-    MouseMove, 0, -300, 5, R
-Return
-
-^!;::
-    MouseClick, Left
-Return
-
-!n::
-    MouseClick, WheelDown, , , 2, 0, D, R
-Return
-
-!p::
-    MouseClick, WheelUp, , , 2, 0, D, R
-Return
-
-
-; Complicated commands
-^+!e::
-    MsgBox, 36, Edit script, Press [Yes] to edit current autohotkey script 
-    IfMsgBox Yes
-        Edit
-Return
-
-^+!r::
+  ; Reload current script
+  if (cmd == "reload" or cmd = "r") {
     MsgBox, 36, Reload script, Press [Yes] to reload current autohotkey script 
     IfMsgBox Yes
-        MsgBox, 64, Script reloaded, Current script reloaded successfully
-        Reload
-Return
+      MsgBox, 64, Script reloaded, Current script reloaded successfully
+      Reload
+    return
+  }
 
-^+!;::
-    MsgBox, 36, Edit logs, Press [Yes] to edit logs
-    IfMsgBox Yes
-        Run C:\Users\HPEC\Dropbox\Docs\Logs.xml
-Return
+  ; Show active windows title
+  if (cmd == "show active win title" or cmd == "awt") {
+    WinGetActiveTitle, Title
+    MsgBox, The active window is "%Title%".
+    return
+  }
 
-^+!1::
-    Run C:\Users\HPEC\Dropbox\Docs\ASCII.jpg
-Return
+  ; For private use
+  if (cmd == "wmo")
+    Run python E:\rnn_club\view_notes.py
+    ;Run Cmd /K "python E:\rnn_club\view_notes.py t"
+  return
+
+  ; For unknown command 
+  MsgBox, Unknown command "%cmd%"
+return
+
+; =============================================================================
+;  Below are codes needed to be refactored
+; =============================================================================
+
+; Mouse Simulation
+;^!h:: 
+;    MouseMove, -50, 0, 5, R
+;Return
+;
+;^!+h:: 
+;    MouseMove, -400, 0, 5, R
+;Return
+;
+;^!l::
+;    MouseMove, 50, 0, 5, R
+;Return
+;
+;^!+l::
+;    MouseMove, 400, 0, 5, R
+;Return
+;
+;^!j::
+;    MouseMove, 0, 50, 5, R
+;Return
+;
+;^!+j::
+;    MouseMove, 0, 300, 5, R
+;Return
+;
+;^!k::
+;    MouseMove, 0, -50, 5, R
+;Return
+;
+;^!+k::
+;    MouseMove, 0, -300, 5, R
+;Return
+;
+;^!;::
+;    MouseClick, Left
+;Return
+;
+;!n::
+;    MouseClick, WheelDown, , , 2, 0, D, R
+;Return
+;
+;!p::
+;    MouseClick, WheelUp, , , 2, 0, D, R
+;Return
+

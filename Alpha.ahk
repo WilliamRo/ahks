@@ -140,51 +140,17 @@ Esc::CapsLock
 return
 
 ; =============================================================================
-;  Below are codes needed to be refactored
+;  Mouse Simulation 
 ; =============================================================================
-
-; Mouse Simulation
-;^!h:: 
-;    MouseMove, -50, 0, 5, R
-;Return
-;
-;^!+h:: 
-;    MouseMove, -400, 0, 5, R
-;Return
-;
-;^!l::
-;    MouseMove, 50, 0, 5, R
-;Return
-;
-;^!+l::
-;    MouseMove, 400, 0, 5, R
-;Return
-;
-;^!j::
-;    MouseMove, 0, 50, 5, R
-;Return
-;
-;^!+j::
-;    MouseMove, 0, 300, 5, R
-;Return
-;
-;^!k::
-;    MouseMove, 0, -50, 5, R
-;Return
-;
-;^!+k::
-;    MouseMove, 0, -300, 5, R
-;Return
-;
-;^!;::
-;    MouseClick, Left
-;Return
-;
-;!n::
-;    MouseClick, WheelDown, , , 2, 0, D, R
-;Return
-;
-;!p::
-;    MouseClick, WheelUp, , , 2, 0, D, R
-;Return
+<^<!h::MouseMove, -50, 0, 5, R
+<^<!+h::MouseMove, -400, 0, 5, R
+<^<!l::MouseMove, 50, 0, 5, R
+<^<!+l::MouseMove, 400, 0, 5, R
+<^<!j::MouseMove, 0, 50, 5, R
+<^<!+j::MouseMove, 0, 300, 5, R
+<^<!k::MouseMove, 0, -50, 5, R
+<^<!+k::MouseMove, 0, -300, 5, R
+<!n::MouseClick, WheelDown, , , 2, 0, D, R
+<!p::MouseClick, WheelUp, , , 2, 0, D, R
+<^<!Enter::MouseClick, Left
 

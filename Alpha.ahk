@@ -17,48 +17,52 @@ WinXOR(Tail)
 ; ---------------------------------------------------------------------------
 ;  Re-map Keys
 ; ---------------------------------------------------------------------------
-; > Transpose Esc and CapsLock
+; Transpose Esc and CapsLock
 CapsLock::Esc
 Esc::CapsLock
+; ATTENTION: Do not set 'CapsLock & *' as this will triger unwanted CapsLock.
 
 ; ---------------------------------------------------------------------------
 ;  Direction Related
 ; ---------------------------------------------------------------------------
 ; ← ↓ ↑ →
-<!h::Send {Left}
-<!j::Send {Down}
-<!k::Send {Up}
-<!l::Send {Right}
+<!h::Send {Left}       ; LAlt + h
+<!j::Send {Down}       ; LAlt + j
+<!k::Send {Up}         ; LAlt + k
+<!l::Send {Right}      ; LAlt + l
 
 ; Windows Desktop
-<!<^.::Send #^{Right}
-<!<^,::Send #^{Left}
+<!<^,::Send #^{Left}   ; LAlt + LCtrl + ,
+<!<^.::Send #^{Right}  ; LAlt + LCtrl + .
 
 ; Other hot keys
-<!.:: Send ^{PgDn}
-<!,:: Send ^{PgUp}
+<!.:: Send ^{PgDn}     ; LAlt + .
+<!,:: Send ^{PgUp}     ; LAlt + ,
 
 ; ---------------------------------------------------------------------------
 ;  Text Editor 
 ; ---------------------------------------------------------------------------
-; Delete backward
-<^h::Send {Backspace}
+; Delete forward/backward
+<^l::Send {Delete}     ; LCtrl + l
+<^h::Send {Backspace}  ; LCtrl + h
 ; Select left/right
-<!<+h::Send +{Left}
-<!<+l::Send +{Right}
+<!<+h::Send +{Left}    ; LAlt + LShift + h
+<!<+l::Send +{Right}   ; LAlt + LShift + l
 ; Jump forward/backward a word
-<!b::Send ^{Left}
-<!f::Send ^{Right}
+<!b::Send ^{Left}      ; LAlt + b
+<!f::Send ^{Right}     ; LAlt + f
 ; Select forward/backward a word
-<!<+b::Send ^+{Left}
-<!<+f::Send ^+{Right}
+<!<+b::Send ^+{Left}   ; LAlt + LShift + b
+<!<+f::Send ^+{Right}  ; LAlt + LShift + f
 ; Jump to line beginning/end
-<!a::Send {Home}
-<!e::Send {End}
+<!a::Send {Home}       ; LAlt + a
+<!e::Send {End}        ; LAlt + e
 
 ; Select to line beginning/end
-<!<+a::Send +{Home}
-<!<+e::Send +{End}
+<!<+a::Send +{Home}    ; LAlt + LShift + a
+<!<+e::Send +{End}     ; LAlt + LShift + e
+; Select a word
+<!w::Send {Control Down}{Right}{Shift Down}{Left}{Control Up}{Shift Up}  ; LAlt + w
 ; Select from cursor to line above/below
 <!<+j::Send {Shift Down}{Down}{Shift Up}
 <!<+k::Send {Shift Down}{Up}{Shift Up}
@@ -69,9 +73,9 @@ Esc::CapsLock
 <!o::Send {End}{Enter}
 <+<!o::Send {Up}{End}{Enter}
 ; Delete this line
-!d::Send {Home}{Shift Down}{End}{Shift Up}{Backspace}
+<!d::Send {Home}{Shift Down}{End}{Shift Up}{Backspace}
 ; Delete all after the cursor in this line  
-!c::Send {Shift Down}{End}{Shift Up}{Backspace}
+<!c::Send {Shift Down}{End}{Shift Up}{Backspace}
 
 ; ---------------------------------------------------------------------------
 ;  App Hotkeys
@@ -80,13 +84,21 @@ Esc::CapsLock
 >!c::WinXOR("Google Chrome")
 >!d::WinXOR("Docear")
 >!p::WinXOR("\.py$")
->!<+p::WinXOR("PowerPoint")
+>!<^p::WinXOR("PowerPoint")
 >!o::WinXOR("OneNote")	 
 >!v::WinXOR("GVIM")
 
 ; ---------------------------------------------------------------------------
 ;  CTRL+SHIFT+ALT Combinations
 ; ---------------------------------------------------------------------------
+
+; ---------------------------------------------------------------------------
+;  Windows Key Combinations
+; ---------------------------------------------------------------------------
+<#<+k::WinMaximize, A 
+<#<+j::WinMinimize, A 
+<#<+h::Send #{Left}
+<#<+l::Send #{Right}  
 
 ; ---------------------------------------------------------------------------
 ;  CTRL+SHIFT+ALT+; -> Command Center
@@ -130,10 +142,11 @@ Esc::CapsLock
   }
 
   ; For private use
-  if (cmd == "wmo")
+  if (cmd == "wmo") {
     Run python E:\rnn_club\view_notes.py
     ;Run Cmd /K "python E:\rnn_club\view_notes.py t"
-  return
+    return
+  }
 
   ; For unknown command 
   MsgBox, Unknown command "%cmd%"
@@ -142,15 +155,29 @@ return
 ; =============================================================================
 ;  Mouse Simulation 
 ; =============================================================================
-<^<!h::MouseMove, -50, 0, 5, R
-<^<!+h::MouseMove, -400, 0, 5, R
-<^<!l::MouseMove, 50, 0, 5, R
-<^<!+l::MouseMove, 400, 0, 5, R
-<^<!j::MouseMove, 0, 50, 5, R
-<^<!+j::MouseMove, 0, 300, 5, R
-<^<!k::MouseMove, 0, -50, 5, R
-<^<!+k::MouseMove, 0, -300, 5, R
-<!n::MouseClick, WheelDown, , , 2, 0, D, R
-<!p::MouseClick, WheelUp, , , 2, 0, D, R
+<^<!h::MouseMove, -50, 0, 5, R              ; LCtrl + LAlt + h
+<^<!<+h::MouseMove, -400, 0, 5, R           ; LCtrl + LAlt + LShift + h
+<^<!j::MouseMove, 0, 50, 5, R               ; LCtrl + LAlt + j
+<^<!<+j::MouseMove, 0, 300, 5, R            ; LCtrl + LAlt + LShift + j
+<^<!k::MouseMove, 0, -50, 5, R              ; LCtrl + LAlt + k
+<^<!<+k::MouseMove, 0, -300, 5, R           ; LCtrl + LAlt + LShift + k
+<^<!l::MouseMove, 50, 0, 5, R               ; LCtrl + LAlt + l
+<^<!<+l::MouseMove, 400, 0, 5, R            ; LCtrl + LAlt + LShift + l
+<!n::MouseClick, WheelDown, , , 2, 0, D, R  ; LAlt + n
+<!p::MouseClick, WheelUp, , , 2, 0, D, R    ; LAlt + p
 <^<!Enter::MouseClick, Left
+
+; =============================================================================
+;  Media
+; =============================================================================
+<^<!<+Up::Send {Volume_Up}
+<^<!<+Down::Send {Volume_Down}
+<^<!<+Space::Send {Media_Play_Pause}
+<^<!<+0::Send {Volume_Mute}
+
+; =============================================================================
+;  Hot Strings  #hs
+; =============================================================================
+::hsmlq::williamvista@qq.com
+::hsmlg::walienluo@gmail.com
 

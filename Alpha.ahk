@@ -62,7 +62,7 @@ Esc::CapsLock
 <!<+a::Send +{Home}    ; LAlt + LShift + a
 <!<+e::Send +{End}     ; LAlt + LShift + e
 ; Select a word
-<!w::Send {Control Down}{Right}{Shift Down}{Left}{Control Up}{Shift Up}  ; LAlt + w
+<!w::Send {Control Down}{Left}{Shift Down}{Right}{Control Up}{Left}{Shift Up}  ; LAlt + w
 ; Select from cursor to line above/below
 <!<+j::Send {Shift Down}{Down}{Shift Up}
 <!<+k::Send {Shift Down}{Up}{Shift Up}
@@ -83,9 +83,12 @@ Esc::CapsLock
 >!a::WinXOR("Adobe Acrobat Pro DC")
 >!c::WinXOR("Google Chrome")
 >!d::WinXOR("Docear")
+>!g::WinXOR("MINGW64:/")
 >!p::WinXOR("\.py$")
->!<^p::WinXOR("PowerPoint")
+>!t::WinXOR("PowerPoint")
 >!o::WinXOR("OneNote")	 
+>!r::WinXOR("Word")	 
+>!u::WinXOR("Outlook")	 
 >!v::WinXOR("GVIM")
 
 ; ---------------------------------------------------------------------------
@@ -143,7 +146,7 @@ Esc::CapsLock
 
   ; For private use
   if (cmd == "wmo") {
-    Run python E:\rnn_club\view_notes.py
+    Run python E:\lambai\view_notes.py
     ;Run Cmd /K "python E:\rnn_club\view_notes.py t"
     return
   }
@@ -178,6 +181,5 @@ return
 ; =============================================================================
 ;  Hot Strings  #hs
 ; =============================================================================
-::hsmlq::williamvista@qq.com
-::hsmlg::walienluo@gmail.com
+;
 

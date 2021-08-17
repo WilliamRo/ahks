@@ -4,10 +4,19 @@
 ; ---------------------------------------------------------------------------
 ;  Function Definitions
 ; ---------------------------------------------------------------------------
-WinXOR(Tail)
+WinXORbyEXE(Key)
+{
+  Pattern = ahk_exe %Key%.exe
+  IfWinActive, %Pattern%
+    WinMinimize, %Pattern%
+  else
+    WinActivate, %Pattern%
+}
+
+WinXORbyTitle(Key)
 {
   SetTitleMatchMode, RegEx
-  Pattern = ^.*%Tail%
+  Pattern = ^.*%Key%
   IfWinActive, %Pattern%
     WinMinimize, %Pattern%
   else
@@ -80,16 +89,22 @@ Esc::CapsLock
 ; ---------------------------------------------------------------------------
 ;  App Hotkeys
 ; ---------------------------------------------------------------------------
->!a::WinXOR("Adobe Acrobat Pro DC")
->!c::WinXOR("Google Chrome")
->!d::WinXOR("Docear")
->!g::WinXOR("MINGW64:/")
->!p::WinXOR("\.py$")
->!t::WinXOR("PowerPoint")
->!o::WinXOR("OneNote")	 
->!r::WinXOR("Word")	 
->!u::WinXOR("Outlook")	 
->!v::WinXOR("GVIM")
+>!a::WinXORbyEXE("Acrobat")
+>!c::WinXORbyEXE("chrome")
+>!d::WinXORbyEXE("javaw")
+>!f::WinXORbyEXE("Explorer")
+>!i::WinXORbyEXE("iTunes")
+>!n::WinXORbyEXE("Notion")
+>!g::WinXORbyEXE("mintty")
+>!l::WinXORbyTitle("Visual Studio Code")
+>!p::WinXORbyEXE("pycharm64")
+>!s::WinXORbyEXE("SumatraPDF")
+>!t::WinXORbyTitle("PowerPoint")
+>!o::WinXORbyTitle("OneNote")	 
+>!r::WinXORbyTitle("Word")	 
+>!u::WinXORbyTitle("Outlook")	 
+>!v::WinXORbyTitle("GVIM")
+>!x::WinXORbyTitle("Xshell")
 
 ; ---------------------------------------------------------------------------
 ;  CTRL+SHIFT+ALT Combinations
@@ -151,8 +166,18 @@ Esc::CapsLock
     return
   }
 
+  if (cmd == "wmi") {
+    Run python E:\lambai\view_notes.py \\172.16.233.191\wmshare\projects\lambai
+    return
+  }
+
+  if (cmd == "mor") { 
+    Run python E:\morse\morse.py
+    return
+  }
+
   ; For unknown command 
-  MsgBox, Unknown command "%cmd%"
+  Run python ./house/tom.py %cmd%
 return
 
 ; =============================================================================
@@ -181,5 +206,49 @@ return
 ; =============================================================================
 ;  Hot Strings  #hs
 ; =============================================================================
-;
+
+
+; =============================================================================
+;  Copy From Internet
+; =============================================================================
+; https://superuser.com/questions/435602/shortcut-in-windows-7-to-switch-between-same-applications-windows-like-cmd
+!`:: ; Next window
+WinGetClass, ActiveClass, A
+WinGet, WinClassCount, Count, ahk_class %ActiveClass%
+IF WinClassCount = 1
+    Return
+Else
+WinGet, List, List, % "ahk_class " ActiveClass
+Loop, % List
+{
+    index := List - A_Index + 1
+    WinGet, State, MinMax, % "ahk_id " List%index%
+    if (State <> -1)
+    {
+        WinID := List%index%
+        break
+    }
+}
+WinActivate, % "ahk_id " WinID
+return
+
+!^`:: ; Last window
+WinGetClass, ActiveClass, A
+WinGet, WinClassCount, Count, ahk_class %ActiveClass%
+IF WinClassCount = 1
+    Return
+Else
+WinGet, List, List, % "ahk_class " ActiveClass
+Loop, % List
+{
+    index := List - A_Index + 1
+    WinGet, State, MinMax, % "ahk_id " List%index%
+    if (State <> -1)
+    {
+        WinID := List%index%
+        break
+    }
+}
+WinActivate, % "ahk_id " WinID
+return
 

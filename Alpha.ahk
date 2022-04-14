@@ -159,23 +159,6 @@ Esc::CapsLock
     return
   }
 
-  ; For private use
-  if (cmd == "wmo") {
-    Run python E:\lambai\view_notes.py
-    ;Run Cmd /K "python E:\rnn_club\view_notes.py t"
-    return
-  }
-
-  if (cmd == "wmi") {
-    Run python E:\lambai\view_notes.py \\172.16.233.191\wmshare\projects\lambai
-    return
-  }
-
-  if (cmd == "mor") { 
-    Run python E:\morse\morse.py
-    return
-  }
-
   ; For unknown command 
   Run python ./house/tom.py %cmd%
 return

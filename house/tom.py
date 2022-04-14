@@ -20,7 +20,7 @@ try:
   jerry.call(func_key, args, kwargs)
 
 except Exception as e:
-  print('Exception:')
+  print('[tom.py] Exception:')
   print('-' * 79)
   print(traceback.format_exc())
   print('-' * 79)

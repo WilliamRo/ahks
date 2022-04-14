@@ -1,5 +1,6 @@
 import configs
 import subprocess
+import os
 import inspect
 
 from box import modules
@@ -13,7 +14,7 @@ def try_to_map(value: str):
 def popen(func: str, *args):
   if func in configs.FUNC_MAP: func = configs.FUNC_MAP[func]
   args = [func] + list(args)
-  subprocess.Popen(args)
+  subprocess.Popen(args, env=dict(path=os.environ.get('path')))
 
 
 def call(func_name: str, args: list, kwargs: dict):

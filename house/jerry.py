@@ -39,9 +39,10 @@ def call(func_name: str, args: list, kwargs: dict):
 
   # Try to convert args type
   for i in range(len(args)):
-    p = params_values[i]
     args[i] = try_to_map(args[i])
-    if has_annotation(p): args[i] = p.annotation(args[i])
+    if func != popen:
+      p = params_values[i]
+      if has_annotation(p): args[i] = p.annotation(args[i])
   # Try to convert kwargs type
   for k, v in kwargs.items():
     p = params_dict[k]

@@ -1,6 +1,6 @@
 import configs
 import subprocess
-import os
+import os, sys
 import inspect
 
 from box import modules
@@ -12,6 +12,9 @@ def try_to_map(value: str):
 
 
 def popen(func: str, *args):
+  if func == 'python':
+    subprocess.check_call([sys.executable, *args])
+    return
   if func in configs.FUNC_MAP: func = configs.FUNC_MAP[func]
   args = [func] + list(args)
   subprocess.Popen(args, env=dict(path=os.environ.get('path')))

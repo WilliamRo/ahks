@@ -15,9 +15,14 @@ def popen(func: str, *args):
   if func == 'python':
     subprocess.check_call([sys.executable, *args])
     return
+
+  # TODO: explorer should be executed without env
+  kwargs = {}
   if func in configs.FUNC_MAP: func = configs.FUNC_MAP[func]
+  else: kwargs['env'] = dict(path=os.environ.get('path'))
+
   args = [func] + list(args)
-  subprocess.Popen(args, env=dict(path=os.environ.get('path')))
+  subprocess.Popen(args, **kwargs)
 
 
 def call(func_name: str, args: list, kwargs: dict):

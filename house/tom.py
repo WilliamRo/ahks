@@ -2,12 +2,21 @@ import traceback
 import sys
 import jerry
 
+import configs
+
 
 try:
   # Get arguments
   parts = sys.argv[1:]
-  if len(parts) == 0: func_key = 'find'
-  else: func_key = parts.pop(0)
+
+  if len(parts) == 0: func_key = 'python'
+  else:
+    # Check CMD_MAP if shortcuts are provided
+    if all([len(parts) == 1, hasattr(configs, 'CMD_MAP'),
+            parts[0] in configs.CMD_MAP]):
+      parts = configs.CMD_MAP[parts[0]].split(' ')
+    func_key = parts.pop(0)
+
   args, kwargs = [], {}
   for p in parts:
     if '=' in p:
